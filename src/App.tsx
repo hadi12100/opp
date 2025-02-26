@@ -1,169 +1,109 @@
-import React, { useState } from 'react';
-import { ShoppingCart } from './models/ShoppingCart';
-import { products } from './data/products';
-import { ShoppingBag, Trash2, Plus, Minus, CreditCard } from 'lucide-react';
+import React from 'react';
+import { Monitor, ShoppingCart, Menu, Search, Heart, Laptop, Cpu, Headphones, Mouse, Keyboard } from 'lucide-react';
+import Navbar from './components/Navbar';
+import ProductCard from './components/ProductCard';
+import CategoryCard from './components/CategoryCard';
 
 function App() {
-  const [cart] = useState(new ShoppingCart());
-  const [, setRefresh] = useState(0);
-  const [isCheckingOut, setIsCheckingOut] = useState(false);
-
-  const forceUpdate = () => setRefresh(prev => prev + 1);
-
-  const addToCart = (productId: number) => {
-    const product = products.find(p => p.id === productId);
-    if (product) {
-      cart.addItem(product);
-      forceUpdate();
+  const featuredProducts = [
+    {
+      id: 1,
+      name: "Ultra-Wide Gaming Monitor",
+      price: 499.99,
+      image: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&q=80&w=1000",
+      description: "34-inch curved gaming monitor with 144Hz refresh rate"
+    },
+    {
+      id: 2,
+      name: "Mechanical Gaming Keyboard",
+      price: 159.99,
+      image: "https://images.unsplash.com/photo-1595225476474-87563907a212?auto=format&fit=crop&q=80&w=1000",
+      description: "RGB mechanical keyboard with Cherry MX switches"
+    },
+    {
+      id: 3,
+      name: "Gaming Laptop",
+      price: 1299.99,
+      image: "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&q=80&w=1000",
+      description: "15.6\" gaming laptop with RTX 4060"
+    },
+    {
+      id: 4,
+      name: "Wireless Gaming Mouse",
+      price: 79.99,
+      image: "https://images.unsplash.com/photo-1527814050087-3793815479db?auto=format&fit=crop&q=80&w=1000",
+      description: "Ultra-lightweight wireless gaming mouse"
     }
-  };
+  ];
 
-  const removeFromCart = (productId: number) => {
-    cart.removeItem(productId);
-    forceUpdate();
-  };
-
-  const updateQuantity = (productId: number, quantity: number) => {
-    cart.updateQuantity(productId, quantity);
-    forceUpdate();
-  };
-
-  const handleCheckout = () => {
-    setIsCheckingOut(true);
-    // Simulate checkout process
-    setTimeout(() => {
-      cart.clear();
-      setIsCheckingOut(false);
-      forceUpdate();
-    }, 2000);
-  };
+  const categories = [
+    { name: "Laptops", icon: <Laptop className="w-6 h-6" /> },
+    { name: "Processors", icon: <Cpu className="w-6 h-6" /> },
+    { name: "Monitors", icon: <Monitor className="w-6 h-6" /> },
+    { name: "Headphones", icon: <Headphones className="w-6 h-6" /> },
+    { name: "Mice", icon: <Mouse className="w-6 h-6" /> },
+    { name: "Keyboards", icon: <Keyboard className="w-6 h-6" /> }
+  ];
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <header className="bg-white shadow-sm sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-800">Shopping Cart OOP</h1>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-full">
-              <ShoppingBag className="w-5 h-5 text-blue-600" />
-              <span className="font-semibold">{cart.getTotalItems()} items</span>
-              <span className="font-bold text-blue-600">${cart.getTotalPrice().toFixed(2)}</span>
-            </div>
+    <div className="min-h-screen bg-gray-50">
+      <Navbar />
+      
+      {/* Hero Section */}
+      <div className="relative bg-gray-900 text-white">
+        <img 
+          src="https://images.unsplash.com/photo-1623282033815-40b05d96c903?auto=format&fit=crop&q=80&w=2000"
+          className="w-full h-[500px] object-cover opacity-50"
+          alt="Hero background"
+        />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-5xl font-bold mb-4">Next-Gen Tech Gear</h1>
+            <p className="text-xl mb-8">Elevate your setup with premium hardware</p>
+            <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg text-lg font-semibold transition-colors">
+              Shop Now
+            </button>
           </div>
         </div>
-      </header>
+      </div>
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
-            <h2 className="text-xl font-semibold mb-4">Products</h2>
-            <div className="grid sm:grid-cols-2 gap-4">
-              {products.map(product => (
-                <div key={product.id} className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition">
-                  <img 
-                    src={product.image} 
-                    alt={product.name} 
-                    className="w-full h-48 object-cover rounded-lg mb-4"
-                  />
-                  <div>
-                    <h3 className="font-semibold text-lg">{product.name}</h3>
-                    <p className="text-blue-600 font-bold text-xl mb-3">${product.price.toFixed(2)}</p>
-                    <button
-                      onClick={() => addToCart(product.id)}
-                      className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center justify-center gap-2"
-                    >
-                      <Plus className="w-4 h-4" />
-                      Add to Cart
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+      {/* Categories */}
+      <div className="max-w-7xl mx-auto px-4 py-16">
+        <h2 className="text-3xl font-bold mb-8">Shop by Category</h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          {categories.map((category, index) => (
+            <CategoryCard key={index} {...category} />
+          ))}
+        </div>
+      </div>
 
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-sm p-6 sticky top-24">
-              <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                <ShoppingBag className="w-5 h-5" />
-                Shopping Cart
-              </h2>
-              
-              {cart.isEmpty() ? (
-                <div className="text-center py-8">
-                  <ShoppingBag className="w-16 h-16 mx-auto text-gray-300 mb-4" />
-                  <p className="text-gray-500">Your cart is empty</p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {cart.getItems().map(item => (
-                    <div key={item.product.id} className="flex gap-4 pb-4 border-b">
-                      <img 
-                        src={item.product.image} 
-                        alt={item.product.name} 
-                        className="w-20 h-20 object-cover rounded-lg"
-                      />
-                      <div className="flex-1">
-                        <h3 className="font-semibold">{item.product.name}</h3>
-                        <p className="text-blue-600 font-bold">
-                          ${item.product.price.toFixed(2)}
-                        </p>
-                        <div className="flex items-center gap-2 mt-2">
-                          <button
-                            onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                            className="p-1 hover:bg-gray-100 rounded"
-                          >
-                            <Minus className="w-4 h-4" />
-                          </button>
-                          <span className="font-semibold">{item.quantity}</span>
-                          <button
-                            onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                            className="p-1 hover:bg-gray-100 rounded"
-                          >
-                            <Plus className="w-4 h-4" />
-                          </button>
-                          <button
-                            onClick={() => removeFromCart(item.product.id)}
-                            className="ml-auto p-1 text-red-600 hover:bg-red-50 rounded"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                  
-                  <div className="space-y-3 pt-4">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">Subtotal</span>
-                      <span>${cart.getTotalPrice().toFixed(2)}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">Shipping</span>
-                      <span>Free</span>
-                    </div>
-                    <div className="flex justify-between font-bold text-lg pt-2 border-t">
-                      <span>Total</span>
-                      <span>${cart.getTotalPrice().toFixed(2)}</span>
-                    </div>
-                    
-                    <button
-                      onClick={handleCheckout}
-                      disabled={isCheckingOut}
-                      className={`w-full py-3 px-4 rounded-lg text-white font-semibold flex items-center justify-center gap-2 transition
-                        ${isCheckingOut 
-                          ? 'bg-gray-400 cursor-not-allowed' 
-                          : 'bg-green-600 hover:bg-green-700'}`}
-                    >
-                      <CreditCard className="w-5 h-5" />
-                      {isCheckingOut ? 'Processing...' : 'Checkout'}
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
+      {/* Featured Products */}
+      <div className="max-w-7xl mx-auto px-4 py-16">
+        <h2 className="text-3xl font-bold mb-8">Featured Products</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {featuredProducts.map(product => (
+            <ProductCard key={product.id} {...product} />
+          ))}
+        </div>
+      </div>
+
+      {/* Newsletter */}
+      <div className="bg-gray-900 text-white py-16">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <h2 className="text-3xl font-bold mb-4">Stay Updated</h2>
+          <p className="mb-8">Subscribe to our newsletter for the latest tech deals and updates</p>
+          <div className="flex max-w-md mx-auto">
+            <input
+              type="email"
+              placeholder="Enter your email"
+              className="flex-1 px-4 py-2 rounded-l-lg text-gray-900"
+            />
+            <button className="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-r-lg font-semibold transition-colors">
+              Subscribe
+            </button>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }
